@@ -1,0 +1,7 @@
+/* English InfoPlist.strings */
+"CFBundleDisplayName" = "OneDay Trip";
+"CFBundleName" = "OneDay Trip";
+"NSLocationWhenInUseUsageDescription" = "Location access is required to recommend nearby attractions, restaurants, and navigation routes.";
+"NSCameraUsageDescription" = "Camera access is required to take photos for sharing trip courses and place visits.";
+"NSPhotoLibraryUsageDescription" = "Photo library access is required to upload photos for trip reviews and courses.";
+"NSPhotoLibraryAddUsageDescription" = "Permission is required to save downloaded trip plans and images to your photo library.";

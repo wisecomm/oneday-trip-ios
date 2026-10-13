@@ -1,0 +1,7 @@
+/* Korean InfoPlist.strings */
+"CFBundleDisplayName" = "하루여행";
+"CFBundleName" = "하루여행";
+"NSLocationWhenInUseUsageDescription" = "내 주변 가볼 만한 곳과 맛집 추천, 여행 동선 길찾기를 위해 현재 위치 정보가 필요합니다.";
+"NSCameraUsageDescription" = "여행 코스 공유 및 장소 방문 인증 사진 촬영을 위해 카메라 권한이 필요합니다.";
+"NSPhotoLibraryUsageDescription" = "여행 코스 공유 및 사진 업로드를 위해 사진 보관함 접근 권한이 필요합니다.";
+"NSPhotoLibraryAddUsageDescription" = "다운로드한 여행 일정 및 이미지를 저장하기 위해 사진 보관함 저장 권한이 필요합니다.";

@@ -1,0 +1,34 @@
+# Xcode
+## User settings
+xcuserdata/
+*.xcuserdatad
+*.xcscmblueprint
+*.xcuserstate
+
+## Build generated
+build/
+DerivedData/
+*.moved-aside
+*.xccheckout
+*.xcworkspace/xcuserdata/
+
+## Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+
+## Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+## OS generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

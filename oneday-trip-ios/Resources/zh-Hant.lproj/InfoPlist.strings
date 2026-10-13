@@ -1,0 +1,7 @@
+/* Traditional Chinese InfoPlist.strings */
+"CFBundleDisplayName" = "一日遊";
+"CFBundleName" = "一日遊";
+"NSLocationWhenInUseUsageDescription" = "為了推薦周邊景點、美食以及路線導航，需要獲取您的目前位置資訊。";
+"NSCameraUsageDescription" = "為了分享旅行路線及拍攝景點照片，需要相機使用權限。";
+"NSPhotoLibraryUsageDescription" = "為了上傳照片及分享路線，需要相簿存取權限。";
+"NSPhotoLibraryAddUsageDescription" = "需要儲存下載的旅行計畫和照片至相簿的權限。";

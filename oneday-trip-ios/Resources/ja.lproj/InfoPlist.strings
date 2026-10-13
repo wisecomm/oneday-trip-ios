@@ -1,0 +1,7 @@
+/* Japanese InfoPlist.strings */
+"CFBundleDisplayName" = "ワンデイトリップ";
+"CFBundleName" = "ワンデイトリップ";
+"NSLocationWhenInUseUsageDescription" = "周辺の観光地やおすすめスポット、ルート案内のために位置情報が必要です。";
+"NSCameraUsageDescription" = "旅行コースの共有や訪問認証写真の撮影のためにカメラへのアクセス権限が必要です。";
+"NSPhotoLibraryUsageDescription" = "写真のアップロードおよび共有のために写真ライブラリへのアクセス権限が必要です。";
+"NSPhotoLibraryAddUsageDescription" = "保存した旅行日程や画像を写真ライブラリに保存するための権限が必要です。";
