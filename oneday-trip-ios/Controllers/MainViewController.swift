@@ -47,6 +47,8 @@ public class MainViewController: UIViewController {
     private func setupLocationManager() {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
+        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+        requestLocationPermission()
     }
 
     private func loadInitialURL() {
@@ -54,7 +56,18 @@ public class MainViewController: UIViewController {
     }
 
     public func requestLocationPermission() {
-        locationManager?.requestWhenInUseAuthorization()
+        let status: CLAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = locationManager?.authorizationStatus ?? .notDetermined
+        } else {
+            status = CLLocationManager.authorizationStatus()
+        }
+
+        if status == .notDetermined {
+            locationManager?.requestWhenInUseAuthorization()
+        } else if status == .authorizedWhenInUse || status == .authorizedAlways {
+            locationManager?.startUpdatingLocation()
+        }
     }
 
     // MARK: - Back Navigation Handling
@@ -129,5 +142,20 @@ extension MainViewController: CLLocationManagerDelegate {
             status = CLLocationManager.authorizationStatus()
         }
         NSLog("[MainViewController] Location authorization status: %d", status.rawValue)
+
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            manager.startUpdatingLocation()
+        }
+    }
+
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        NSLog("[MainViewController] Updated location: lat=%.6f, lng=%.6f", location.coordinate.latitude, location.coordinate.longitude)
+        // 단발성 위치 확인 후 배터리 절약을 위해 정지
+        manager.stopUpdatingLocation()
+    }
+
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        NSLog("[MainViewController] Location manager failed with error: %@", error.localizedDescription)
     }
 }

@@ -246,6 +246,12 @@ extension WebViewManager: WKUIDelegate {
     public func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
         decisionHandler(.grant)
     }
+
+    @available(iOS 15.0, *)
+    public func webView(_ webView: WKWebView, requestGeolocationPermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+        NSLog("[WebViewManager] Geolocation permission requested for origin: %@://%@:%ld", origin.protocol, origin.host, origin.port)
+        decisionHandler(.grant)
+    }
 }
 
 // MARK: - WKDownloadDelegate
