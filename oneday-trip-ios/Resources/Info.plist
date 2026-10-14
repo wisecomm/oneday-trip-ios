@@ -17,16 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>nmap</string>
@@ -36,14 +29,21 @@
 		<string>comgooglemapsurl</string>
 		<string>maps</string>
 	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>내 주변 가볼 만한 곳과 맛집 추천, 여행 동선 길찾기를 위해 현재 위치 정보가 필요합니다.</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>여행 코스 공유 및 장소 방문 인증 사진 촬영을 위해 카메라 권한이 필요합니다.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>여행 코스 공유 및 사진 업로드를 위해 사진 보관함 접근 권한이 필요합니다.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>내 주변 가볼 만한 곳과 맛집 추천, 여행 동선 길찾기를 위해 현재 위치 정보가 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>다운로드한 여행 일정 및 이미지를 저장하기 위해 사진 보관함 저장 권한이 필요합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>여행 코스 공유 및 사진 업로드를 위해 사진 보관함 접근 권한이 필요합니다.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
