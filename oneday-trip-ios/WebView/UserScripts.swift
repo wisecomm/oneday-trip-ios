@@ -105,7 +105,9 @@ public struct UserScripts {
             style.type = 'text/css';
             style.appendChild(document.createTextNode(
                 'input, select, textarea { font-size: 16px !important; } ' +
-                'html, body { max-width: 100vw !important; overflow-x: hidden !important; -webkit-text-size-adjust: 100% !important; }'
+                'html, body { max-width: 100vw !important; overflow-x: hidden !important; -webkit-text-size-adjust: 100% !important; } ' +
+                'nav.fixed, nav[class*="bottom-0"] { padding-bottom: max(6px, calc(env(safe-area-inset-bottom, 0px) - 16px)) !important; } ' +
+                'nav.fixed ul a, nav[class*="bottom-0"] ul a { padding-top: 6px !important; padding-bottom: 4px !important; }'
             ));
 
             if (document.head) {

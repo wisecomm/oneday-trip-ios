@@ -69,6 +69,7 @@ public class WebViewManager: NSObject {
         self.webView.scrollView.maximumZoomScale = 1.0
         self.webView.scrollView.bouncesZoom = false
         self.webView.scrollView.showsHorizontalScrollIndicator = false
+        self.webView.scrollView.contentInsetAdjustmentBehavior = .never
     }
 
     public func load(urlString: String) {
