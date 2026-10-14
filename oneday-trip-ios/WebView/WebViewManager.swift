@@ -64,6 +64,11 @@ public class WebViewManager: NSObject {
         self.appInterface.webView = webView
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
+        self.webView.scrollView.delegate = self
+        self.webView.scrollView.minimumZoomScale = 1.0
+        self.webView.scrollView.maximumZoomScale = 1.0
+        self.webView.scrollView.bouncesZoom = false
+        self.webView.scrollView.showsHorizontalScrollIndicator = false
     }
 
     public func load(urlString: String) {
@@ -95,6 +100,17 @@ extension WebViewManager: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         NSLog("[WebViewManager] Page finished: %@", webView.url?.absoluteString ?? "")
         delegate?.webViewDidFinishLoading()
+
+        // 뷰포트 고정 및 화면 배율(Zoom Scale) 1.0 원복
+        let resetZoomJS = """
+            var meta = document.querySelector('meta[name="viewport"]');
+            if (meta) {
+                meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+            }
+            window.scrollTo(0, 0);
+        """
+        webView.evaluateJavaScript(resetZoomJS, completionHandler: nil)
+        webView.scrollView.setZoomScale(1.0, animated: false)
     }
 
     public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
@@ -372,3 +388,18 @@ extension WebViewManager: WKDownloadDelegate {
         NSLog("[WebViewManager] Download failed with error: %@", error.localizedDescription)
     }
 }
+
+// MARK: - UIScrollViewDelegate
+extension WebViewManager: UIScrollViewDelegate {
+
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return nil // 핀치 줌 및 입력창 포커스 자동 확대(Zoom-in) 방지
+    }
+
+    public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        if scale != 1.0 {
+            scrollView.setZoomScale(1.0, animated: false)
+        }
+    }
+}
+

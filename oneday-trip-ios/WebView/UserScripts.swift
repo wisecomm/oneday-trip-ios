@@ -85,11 +85,45 @@ public struct UserScripts {
                     var download = this.download;
                     if (href && download) {
                         window.__downloadMap[href] = download;
-                        console.log("[UserScript] Captured filename for " + href + " -> " + download);
                     }
                     oldClick.apply(this, arguments);
                 };
             }
+
+            // 4. iOS 입력창(input) 포커스 시 자동 확대(Zoom-in) 방지 및 Viewport 고정
+            var metaFixScript = function() {
+                var meta = document.querySelector('meta[name="viewport"]');
+                if (!meta) {
+                    meta = document.createElement('meta');
+                    meta.name = 'viewport';
+                    document.head.appendChild(meta);
+                }
+                meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+            };
+
+            var style = document.createElement('style');
+            style.type = 'text/css';
+            style.appendChild(document.createTextNode(
+                'input, select, textarea { font-size: 16px !important; } ' +
+                'html, body { max-width: 100vw !important; overflow-x: hidden !important; -webkit-text-size-adjust: 100% !important; }'
+            ));
+
+            if (document.head) {
+                document.head.appendChild(style);
+                metaFixScript();
+            } else {
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.head.appendChild(style);
+                    metaFixScript();
+                });
+            }
+
+            document.addEventListener('blur', function(e) {
+                if (e.target && /input|textarea|select/i.test(e.target.tagName)) {
+                    metaFixScript();
+                    window.scrollTo(0, window.scrollY);
+                }
+            }, true);
         })();
         """
         return WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: false)
