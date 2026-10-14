@@ -32,6 +32,9 @@
 		<string>nmap</string>
 		<string>kakaomap</string>
 		<string>tmap</string>
+		<string>comgooglemaps</string>
+		<string>comgooglemapsurl</string>
+		<string>maps</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>내 주변 가볼 만한 곳과 맛집 추천, 여행 동선 길찾기를 위해 현재 위치 정보가 필요합니다.</string>

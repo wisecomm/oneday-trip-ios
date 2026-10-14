@@ -17,6 +17,9 @@ public class WebViewManager: NSObject {
 
     private static let naverMapAppStoreURL = "https://apps.apple.com/app/id311867728"
     private static let naverMapWebURL = "https://map.naver.com"
+    private static let kakaoMapAppStoreURL = "https://apps.apple.com/app/id304608425"
+    private static let tmapAppStoreURL = "https://apps.apple.com/app/id431589174"
+    private static let googleMapsAppStoreURL = "https://apps.apple.com/app/id585027354"
 
     public init(presentingViewController: UIViewController) {
         self.presentingViewController = presentingViewController
@@ -107,9 +110,12 @@ extension WebViewManager: WKNavigationDelegate {
     private func handleLoadError(_ error: Error) {
         delegate?.webViewDidFail(with: error)
         let nsError = error as NSError
-        // 사용자가 내비게이션을 취소한 경우는 무시 (Code -999)
-        if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled {
-            return
+        // 사용자가 내비게이션을 취소한 경우 (Code -999) 또는 외부 앱 스킴 시도 등으로 인한 미지원 URL (Code -1002) 무시
+        if nsError.domain == NSURLErrorDomain {
+            if nsError.code == NSURLErrorCancelled || nsError.code == NSURLErrorUnsupportedURL {
+                NSLog("[WebViewManager] Ignored benign navigation error (code %d): %@", nsError.code, error.localizedDescription)
+                return
+            }
         }
 
         guard let vc = presentingViewController else { return }
@@ -134,35 +140,83 @@ extension WebViewManager: WKNavigationDelegate {
         if scheme == "nmap" {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            } else {
-                // 앱 미설치 시 네이버 지도 웹 또는 앱스토어로 이동
-                if let appStoreURL = URL(string: WebViewManager.naverMapAppStoreURL) {
-                    UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
-                }
+            } else if let appStoreURL = URL(string: WebViewManager.naverMapAppStoreURL) {
+                UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
             }
             decisionHandler(.cancel)
             return
         }
 
-        // 2. 카카오맵, 티맵 스킴 연동
-        if scheme == "kakaomap" || scheme == "tmap" {
+        // 2. 카카오맵 스킴 (kakaomap://)
+        if scheme == "kakaomap" {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                decisionHandler(.cancel)
-                return
+            } else if let appStoreURL = URL(string: WebViewManager.kakaoMapAppStoreURL) {
+                UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
             }
+            decisionHandler(.cancel)
+            return
         }
 
-        // 3. 전화(tel:), 메일(mailto:), 메시지(sms:) 등 시스템 스킴 처리
+        // 3. 티맵 스킴 (tmap://)
+        if scheme == "tmap" {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else if let appStoreURL = URL(string: WebViewManager.tmapAppStoreURL) {
+                UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+            }
+            decisionHandler(.cancel)
+            return
+        }
+
+        // 4. 구글맵 스킴 (comgooglemaps://, comgooglemapsurl://, googlemaps://)
+        if scheme == "comgooglemaps" || scheme == "comgooglemapsurl" || scheme == "googlemaps" {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else if let appStoreURL = URL(string: WebViewManager.googleMapsAppStoreURL) {
+                UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+            }
+            decisionHandler(.cancel)
+            return
+        }
+
+        // 5. 애플 지도 스킴 (maps://)
+        if scheme == "maps" {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+            decisionHandler(.cancel)
+            return
+        }
+
+        // 6. 안드로이드 Intent 스킴 (intent://)
+        if scheme == "intent" {
+            handleIntentURL(url)
+            decisionHandler(.cancel)
+            return
+        }
+
+        // 7. 전화(tel:), 메일(mailto:), 메시지(sms:), 앱스토어(itms-apps:) 등 시스템 스킴 처리
         if scheme == "tel" || scheme == "mailto" || scheme == "sms" || scheme == "itms-apps" || scheme == "itms-appss" {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                decisionHandler(.cancel)
-                return
             }
+            decisionHandler(.cancel)
+            return
         }
 
-        // 4. 새 창(target="_blank") 열기 요청 시 현재 웹뷰에서 탐색
+        // 8. 기타 외부 커스텀 스킴 (http, https, about, data, blob이 아닌 모든 스킴)
+        if scheme != "http" && scheme != "https" && scheme != "about" && scheme != "data" && scheme != "blob" {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                NSLog("[WebViewManager] Unhandled custom scheme: %@", scheme)
+            }
+            decisionHandler(.cancel)
+            return
+        }
+
+        // 9. 새 창(target="_blank") 열기 요청 시 현재 웹뷰에서 탐색
         if navigationAction.targetFrame == nil {
             webView.load(navigationAction.request)
             decisionHandler(.cancel)
@@ -170,6 +224,48 @@ extension WebViewManager: WKNavigationDelegate {
         }
 
         decisionHandler(.allow)
+    }
+
+    private func handleIntentURL(_ url: URL) {
+        let urlString = url.absoluteString
+
+        // 1. browser_fallback_url 파라미터가 있는 경우 추출하여 열기
+        if let fallbackRange = urlString.range(of: "browser_fallback_url=") {
+            let encodedFallback = String(urlString[fallbackRange.upperBound...]).components(separatedBy: ";").first ?? ""
+            if let decodedFallback = encodedFallback.removingPercentEncoding,
+               let fallbackURL = URL(string: decodedFallback) {
+                if UIApplication.shared.canOpenURL(fallbackURL) {
+                    UIApplication.shared.open(fallbackURL, options: [:], completionHandler: nil)
+                    return
+                }
+            }
+        }
+
+        // 2. Google Maps intent인 경우 (예: intent://maps.google.com/...)
+        if urlString.contains("maps.google.com") || urlString.contains("google.com/maps") {
+            if let gmapsURL = URL(string: "comgooglemaps://"), UIApplication.shared.canOpenURL(gmapsURL) {
+                let cleanURLString = urlString.replacingOccurrences(of: "intent://", with: "https://").components(separatedBy: "#Intent").first ?? ""
+                if let cleanURL = URL(string: cleanURLString) {
+                    UIApplication.shared.open(cleanURL, options: [:], completionHandler: nil)
+                    return
+                }
+            } else if let appStoreURL = URL(string: WebViewManager.googleMapsAppStoreURL) {
+                UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+                return
+            }
+        }
+
+        // 3. scheme=https 혹은 scheme=http 파라미터 추출하여 웹 URL로 변환
+        if let schemeRange = urlString.range(of: "scheme=") {
+            let schemePart = String(urlString[schemeRange.upperBound...]).components(separatedBy: ";").first ?? "https"
+            let pathPart = urlString.replacingOccurrences(of: "intent://", with: "").components(separatedBy: "#Intent").first ?? ""
+            if let convertedURL = URL(string: "\(schemePart)://\(pathPart)") {
+                if UIApplication.shared.canOpenURL(convertedURL) {
+                    UIApplication.shared.open(convertedURL, options: [:], completionHandler: nil)
+                    return
+                }
+            }
+        }
     }
 
     @available(iOS 14.5, *)
