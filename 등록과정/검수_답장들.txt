@@ -1,0 +1,54 @@
+
+- 첫번쨰 반련 시 동영상 파일 첨부 답변
+  Build 4 버전 올린 이유 설명 ( 웹뷰에 구글문제 적용해서 같이 올림 )
+  testflight 에서 올린 파일 먼저 확인 함
+  
+
+Note: We have also uploaded a new build (Build 3) with enhanced external map scheme handling and navigation stability.
+
+
+Dear Apple App Review Team,
+
+Thank you for your feedback regarding our new app submission.
+Below are the detailed responses to your 6 questions to help you better understand "OneDay Trip (하루여행)".
+
+--------------------------------------------------
+1. Screen Recording of the App:
+We have recorded and attached the full walkthrough video directly to this message. It demonstrates the complete user journey on a physical iPhone running the latest iOS, including app launch, location permission handling, browsing attractions, login, and the account deletion flow.
+- Video Attachment: Please see the attached video file (onedaytrip-4.mov).
+
+
+2. App Purpose & Target Audience:
+- Purpose: "OneDay Trip" is a location-based travel itinerary and local recommendation platform designed to help travelers easily discover day-trip courses, tourist attractions, and local restaurants based on their real-time GPS location.
+- Target Audience: Domestic and international travelers looking for spontaneous day trips, weekend outings, and authentic local travel experiences in South Korea. The app supports 4 languages (Korean, English, Japanese, Chinese) to accommodate international tourists.
+
+3. Access Instructions & Demo Credentials:
+The app allows users to explore main features (map browsing, curated courses, navigation links) immediately without logging in.
+For features requiring authentication, please use the following demo credentials:
+- Role / Account: App Reviewer Test Account
+- Username / Email: danyoh1@gmail.com
+- Password: 123456
+* How to test:
+1) Launch the app and allow Location Permission to view nearby spots.
+2) Tap on any attraction or course card to view details and map route options.
+3) Navigate to the "My" tab, log in with the credentials above, and verify the "Delete Account" (회원 탈퇴) option under user settings.
+
+4. External Services, Tools, and Platforms Used:
+- Cloud Hosting & Backend: Vercel (Web infrastructure)
+- Location Hardware: Apple CoreLocation framework (GPS) & WebKit Geolocation
+- Map & Navigation: Native iOS URL schemes for external map apps (Naver Map, KakaoMap, Tmap)
+- Content & Data Sources: Curated travel datasets and Korea Tourism Organization (TourAPI) public open data.
+- In-App Purchases / Payments: None (100% Free service).
+- AI Services: None.
+
+5. Regional Differences:
+The app operates consistently across all regions without geographic lock or regional feature restrictions. While the curated travel content is currently focused on destinations in South Korea, users anywhere in the world can browse itineraries and use the app identically.
+
+6. Regulated Industry & Third-Party Materials:
+The app does not operate in any highly regulated industry (such as healthcare, banking, or gambling). All travel information and imagery use open public data provided under the Korea Public License (KOGL) or proprietary curated content owned by our team.
+--------------------------------------------------
+
+Please let us know if you require any further information or verification. We look forward to your review and approval.
+
+Best regards,
+OneDay Trip Team
