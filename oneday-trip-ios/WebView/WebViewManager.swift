@@ -197,8 +197,8 @@ extension WebViewManager: WKNavigationDelegate {
             return
         }
 
-        // 5. 애플 지도 스킴 (maps://)
-        if scheme == "maps" {
+        // 5. 애플 지도 스킴 (maps://) 및 maps.apple.com 도메인
+        if scheme == "maps" || url.host == "maps.apple.com" {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
